@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timetable Management System</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .filter-form {
+            margin-bottom: 20px;
+        }
+        .timetable-table {
+            margin-top: 20px;
+        }
+        .table th, .table td {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar" style="background-color: #025830; padding: 20PX; margin-bottom: 20PX;">
+        <span class="brand-text font-weight-light" style="color: aliceblue;">MIU Timetabling Management System</span>
+
+    </div>
+    <div class="container">
+        
+        <div class="form" style="box-shadow: 0px 0px 7px 0px; padding: 20px; border-radius: 5PX; font-size: 13px;">
+            <form method="get" class="filter-form row">
+                <div class="form-group col-md-3">
+                    <label for="academic_year"><b>Academic Year:</b> </label>
+                    <select id="academic_year" name="academic_year" class="form-control">
+                        <option value="">Select Academic Year</option>
+                        {% for year in academic_years %}
+                        <option value="{{ year.id }}" {% if year.id|stringformat:"s" == request.GET.academic_year %}selected{% endif %}>{{ year.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="semester"><b>Semester:</b> </label>
+                    <select id="semester" name="semester" class="form-control">
+                        <option value="">Select Semester</option>
+                        {% for semester in semesters %}
+                        <option value="{{ semester.id }}" {% if semester.id|stringformat:"s" == request.GET.semester %}selected{% endif %}>{{ semester.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="faculty"><b>Faculty:</b> </label>
+                    <select id="faculty" name="faculty" class="form-control">
+                        <option value="">Select Faculty</option>
+                        {% for faculty in faculties %}
+                        <option value="{{ faculty.id }}" {% if faculty.id|stringformat:"s" == request.GET.faculty %}selected{% endif %}>{{ faculty.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="course"><b>Course:</b></label>
+                    <select id="course" name="course" class="form-control">
+                        <option value="">Select Course</option>
+                        {% for course in courses %}
+                        <option value="{{ course.id }}" {% if course.id|stringformat:"s" == request.GET.course %}selected{% endif %}>{{ course.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group col-md-12 text-center">
+                    <button type="submit" class="btn btn-primary mt-3">View Timetable</button>
+    
+    <a href="{% url 'general_timetable_view' %}" target="_blank">General Timetable</a>
+                </div>
+            </form>
+
+        </div><hr>
+       
+
+        {% if timetables %}
+        <h4 class=" mb-4" style="font-weight: 600;">TEACHING TIMETABLE</h4>
+        <table class="table table-bordered timetable-table">
+            <thead>
+                <tr style="background-color: rgba(2, 43, 0, 0.973); color: #fff;">
+                    <th>Day</th>
+                    <th>8:30 - 10:30</th>
+                    <th>11:00 - 13:00</th>
+                    <th>14:00 - 16:00</th>
+                    <th>16:00 - 18:00</th>
+                </tr>
+            </thead>
+            <tbody style="font-size: 13px;">
+                {% for day, slots in timetable_data.items %}
+                <tr>
+                    <td>{{ day }}</td>
+                    <td>
+                        <ul>
+                            {% for item in slots.slot_1 %}
+                                {{ item|safe }}
+                            {% endfor %}
+                        </ul>
+                    </td>
+                    <td>
+                        <ul>
+                            {% for item in slots.slot_2 %}
+                                {{ item|safe }}
+                            {% endfor %}
+                        </ul>
+                    </td>
+                    <td>
+                        <ul>
+                            {% for item in slots.slot_3 %}
+                                {{ item|safe }}
+                            {% endfor %}
+                        </ul>
+                    </td>
+                    <td>
+                        <ul>
+                            {% for item in slots.slot_4 %}
+                                {{ item|safe }}
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p class="text-center">No timetables found for the selected criteria.</p>
+        {% endif %}
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

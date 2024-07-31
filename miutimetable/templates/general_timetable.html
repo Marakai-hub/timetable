@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>General Timetable</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .timetable-table {
+            margin-top: 20px;
+        }
+        .table th, .table td {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center my-4">General Timetable</h1>
+        
+        {% if timetables %}
+        <h2 class="text-center mb-4">Timetable</h2>
+        <table class="table table-bordered timetable-table" id="timetable">
+            <thead>
+                <tr style="background-color: rgba(2, 43, 0, 0.973); color: #fff;">
+                    <th>Day</th>
+                    <th>8:00 - 10:00</th>
+                    <th>10:00 - 13:00</th>
+                    <th>13:00 - 16:00</th>
+                    <th>16:00 - 19:00</th>
+                </tr>
+            </thead>
+            <tbody style="font-size: 13px;">
+                {% for day, slots in timetable_data.items %}
+                <tr>
+                    <td>{{ day }}</td>
+                    {% for slot in slots.values %}
+                    <td>
+                        {% for course in slot %}
+                        <div>{{ course }}</div>
+                        {% endfor %}
+                    </td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="text-center mt-4">
+            <button class="btn btn-primary" onclick="downloadTable()">Download Timetable</button>
+        </div>
+        {% else %}
+        <p class="text-center">No timetables found.</p>
+        {% endif %}
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        function downloadTable() {
+            var table = document.getElementById('timetable');
+            var html = table.outerHTML;
+            var blob = new Blob(['\ufeff', html], { type: 'application/py' });
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = 'timetable.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+    </script>
+</body>
+</html>

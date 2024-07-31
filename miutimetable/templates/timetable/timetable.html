@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timetable Management System</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .filter-form {
+            margin-bottom: 20px;
+        }
+        .timetable-table {
+            margin-top: 20px;
+        }
+        .table th, .table td {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center my-4">MIU Timetable Management System</h1>
+        <form method="get" class="filter-form row">
+            <div class="form-group col-md-3">
+                <label for="academic_year">Academic Year:</label>
+                <select id="academic_year" name="academic_year" class="form-control">
+                    {% for year in academic_years %}
+                    <option value="{{ year.id }}">{{ year.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group col-md-3">
+                <label for="semester">Semester:</label>
+                <select id="semester" name="semester" class="form-control">
+                    {% for semester in semesters %}
+                    <option value="{{ semester.id }}">{{ semester.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group col-md-3">
+                <label for="faculty">Faculty:</label>
+                <select id="faculty" name="faculty" class="form-control">
+                    {% for faculty in faculties %}
+                    <option value="{{ faculty.id }}">{{ faculty.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group col-md-3">
+                <label for="course">Course:</label>
+                <select id="course" name="course" class="form-control">
+                    {% for course in courses %}
+                    <option value="{{ course.id }}">{{ course.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group col-md-12 text-center">
+                <button type="submit" class="btn btn-primary mt-3">View Timetable</button>
+            </div>
+        </form>
+
+        {% if timetables %}
+        <h2 class="text-center my-4">Timetable</h2>
+        <table class="table table-bordered timetable-table">
+            <thead>
+                <tr>
+                    <th>Course Unit</th>
+                    <th>Lecturer</th>
+                    <th>Day of Week</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for timetable in timetables %}
+                <tr>
+                    <td><b>{{ timetable.course_unit.code}}</b>&nbsp{{ timetable.course_unit.name }}</td>
+                    <td>{{ timetable.course_unit.lecturer.name }} ({{ timetable.course_unit.lecturer.contact }})</td>
+                    <td>{{ timetable.day_of_week }}</td>
+                    <td>{{ timetable.start_time }}</td>
+                    <td>{{ timetable.end_time }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
